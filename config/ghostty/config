@@ -1,3 +1,5 @@
 theme = cool-night
 font-size = 14
+font-thicken = true
 font-feature = -calt
+adjust-cell-height = 10%

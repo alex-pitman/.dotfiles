@@ -7,7 +7,7 @@ return {
     },
   },
   dependencies = {
-    { 'mson-org/mason.nvim', opts = {} },
+    { 'mason-org/mason.nvim', opts = {} },
     'neovim/nvim-lspconfig',
   },
 }

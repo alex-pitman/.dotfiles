@@ -3,6 +3,8 @@ return {
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "nvim-neotest/nvim-nio",
+    "mason-org/mason.nvim",
+    "jay-babu/mason-nvim-dap.nvim",
     "leoluz/nvim-dap-go",
   },
   keys = {
@@ -71,15 +73,24 @@ return {
     },
   },
   config = function()
+    -- install required debuggers
+    require("mason-nvim-dap").setup({
+      automatic_installation = true,
+      ensure_installed = {
+        "delve",
+      },
+    })
+
+    -- configure dap & dapui
     local dap = require("dap")
     local dapui = require("dapui")
-    local dapgo = require("dap-go")
-
     dapui.setup()
-    dapgo.setup()
 
     dap.listeners.after.event_initialized["dapui_config"] = dapui.open
     dap.listeners.before.event_terminated["dapui_config"] = dapui.close
     dap.listeners.before.event_exited["dapui_config"] = dapui.close
+
+    -- configure language specific debuggers
+    require("dap-go").setup()
   end,
 }

@@ -3,7 +3,7 @@ Install the following with brew:
 * ghostty
 * zoxide
 * tmux
-* tree-sitter-clie
+* tree-sitter-cli
 
 #### Setup Instructions:
 1. `brew install stow`

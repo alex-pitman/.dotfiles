@@ -116,13 +116,13 @@ source $ZSH/oh-my-zsh.sh
 alias reload-zsh="source ~/.zshrc"
 alias edit-zsh="nvim ~/.zshrc"
 
-# Zoxide setup
+# zoxide setup
 eval "$(zoxide init zsh)"
 
-# Load machine specific variables
+# load machine specific variables
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
-# Git helpers
+# git helpers
 alias gspp="git stash && git pull && git stash pop"
 ghr() {
   gh repo view $GITHUB_OWNER/$1 --web
@@ -130,3 +130,9 @@ ghr() {
 ghs() {
   gh search code $1 --owner=$GITHUB_OWNER --web
 }
+alias repush="git commit --amend --no-edit && git push origin HEAD --force-with-lease"
+
+# nvm setup
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion

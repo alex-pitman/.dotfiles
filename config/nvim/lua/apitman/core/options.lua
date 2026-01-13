@@ -11,6 +11,7 @@ vim.o.cursorline = true
 vim.o.scrolloff = 10
 vim.o.inccommand = "split" -- preview substitutions
 vim.o.signcolumn = "yes" -- always keep the sign column on
+vim.o.winborder = "rounded"
 
 -- editor
 vim.o.breakindent = true

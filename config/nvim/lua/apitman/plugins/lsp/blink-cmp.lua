@@ -39,6 +39,11 @@ return {
           },
         },
       },
+      completion = {
+        documentation = {
+          auto_show = true,
+        },
+      },
     },
   },
 }

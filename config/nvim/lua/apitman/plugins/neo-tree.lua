@@ -1,17 +1,17 @@
 return {
-  'nvim-neo-tree/neo-tree.nvim',
-  version = '*',
+  "nvim-neo-tree/neo-tree.nvim",
+  version = "*",
   dependencies = {
-    'nvim-lua/plenary.nvim',
-    'MunifTanjim/nui.nvim',
-    'nvim-tree/nvim-web-devicons',
+    "nvim-lua/plenary.nvim",
+    "MunifTanjim/nui.nvim",
+    "nvim-tree/nvim-web-devicons",
   },
   lazy = false,
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { "\\", ":Neotree reveal<CR>", desc = "NeoTree reveal", silent = true },
   },
   opts = {
-    close_if_last_window = true,
+    close_if_last_window = false,
     filesystem = {
       filtered_items = {
         visible = true,
@@ -21,7 +21,7 @@ return {
       },
       window = {
         mappings = {
-          ['\\'] = 'close_window',
+          ["\\"] = "close_window",
         },
       },
     },

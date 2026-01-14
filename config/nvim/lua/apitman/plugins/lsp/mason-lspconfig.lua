@@ -9,6 +9,7 @@ return {
       "gopls",
       "jdtls",
       "lua_ls",
+      "protols",
     },
   },
 }

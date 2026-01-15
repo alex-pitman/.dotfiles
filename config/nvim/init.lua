@@ -1,3 +1,3 @@
-require 'options'
-require 'keymaps'
-require 'lazy-bootstrap'
+require('apitman.core')
+require('apitman.lazy')
+require('apitman.lsp')

@@ -3,3 +3,6 @@ font-size = 14
 font-thicken = true
 font-feature = -calt
 adjust-cell-height = 10%
+
+background-opacity = 0.9
+background-blur-radius = 10

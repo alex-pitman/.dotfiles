@@ -7,9 +7,11 @@ return {
   opts = {
     ensure_installed = {
       "gopls",
+      "graphql",
       "jdtls",
       "lua_ls",
       "protols",
+      "ts_ls",
     },
   },
 }

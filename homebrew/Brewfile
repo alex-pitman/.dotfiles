@@ -1,0 +1,50 @@
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Debugger for the Go programming language
+brew "delve"
+# Modern, maintained replacement for ls
+brew "eza"
+# Like neofetch, but much faster because written mostly in C
+brew "fastfetch"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
+brew "git"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
+# Deliver Go binaries as fast and easily as possible
+brew "goreleaser"
+# Simple terminal UI for git commands
+brew "lazygit"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.13"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Terminal multiplexer
+brew "tmux"
+# Parser generator tool
+brew "tree-sitter-cli"
+# Tools for the WireGuard secure network tunnel
+brew "wireguard-tools"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Terminal-based AI coding assistant
+cask "claude-code"
+# OpenJDK distribution from Amazon
+cask "corretto@11"
+# OpenJDK distribution from Amazon
+cask "corretto@21"
+# Universal database tool and SQL client
+cask "dbeaver-community"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Terminal emulator as alternative to Apple's Terminal app
+cask "iterm2"

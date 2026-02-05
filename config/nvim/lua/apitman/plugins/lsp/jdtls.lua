@@ -8,37 +8,50 @@ return {
   config = function()
     local jdtls = require("jdtls")
 
-    -- Mason 2.0 removed get_install_path(), use $MASON env variable instead
+    -- Get the paths to the required binaries
     local jdtls_path = vim.fn.expand("$MASON/packages/jdtls")
     local java_debug_path = vim.fn.expand("$MASON/packages/java-debug-adapter")
     local java_test_path = vim.fn.expand("$MASON/packages/java-test")
 
-    -- bundles for debugging
+    -- Get the bundles for debugging
     local bundles = {
       vim.fn.glob(java_debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar", true),
     }
     vim.list_extend(bundles, vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar", true), "\n"))
 
     local function setup_jdtls()
+      -- Construct the workspace directory to pass to jdtls
       local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
       local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
 
+      -- Build the command that starts jdtls
+      local cmd = {
+        jdtls_path .. "/bin/jdtls",
+        "-data",
+        workspace_dir,
+      }
+
+      -- Set root directoy markers
+      local root_dir = vim.fs.root(0, { "gradlew", "mvnw", ".git", "pom.xml", "build.gradle" })
+
+      -- Configure jdtls settings
+      local settings = {
+        java = {
+          inlayHints = { parameterNames = { enabled = "all" } },
+          signatureHelp = { enabled = true },
+        },
+      }
+
+      -- Configure additional initialization options
+      local init_options = {
+        bundlee = bundles,
+      }
+
       local config = {
-        cmd = {
-          jdtls_path .. "/bin/jdtls",
-          "-data",
-          workspace_dir,
-        },
-        root_dir = vim.fs.root(0, { "gradlew", "mvnw", ".git", "pom.xml", "build.gradle" }),
-        settings = {
-          java = {
-            inlayHints = { parameterNames = { enabled = "all" } },
-            signatureHelp = { enabled = true },
-          },
-        },
-        init_options = {
-          bundles = bundles,
-        },
+        cmd = cmd,
+        root_dir = root_dir,
+        settings = settings,
+        init_options = init_options,
         on_attach = function(_, bufnr)
           jdtls.setup_dap({ hotcodereplace = "auto" })
 

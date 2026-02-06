@@ -1,52 +1,140 @@
-local jdtls = require("jdtls")
+local function get_jdtls_path()
+  -- Return where mason installed the jdtls binary
+  return vim.fn.expand("$MASON/packages/jdtls")
+end
 
--- Mason package paths
-local jdtls_path = vim.fn.expand("$MASON/packages/jdtls")
-local java_debug_path = vim.fn.expand("$MASON/packages/java-debug-adapter")
-local java_test_path = vim.fn.expand("$MASON/packages/java-test")
+local function get_workspace_dir()
+  -- Construct the workspace directory for the currently opened project
+  local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+  return vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+end
 
--- Bundles for debugging and testing
-local bundles = {
-  vim.fn.glob(java_debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar", true),
-}
-vim.list_extend(bundles, vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar", true), "\n"))
+local function get_bundles()
+  -- Find where mason installed the debug adapater and test binaries
+  local debug_path = vim.fn.expand("$MASON/packages/java-debug-adapter")
+  local test_path = vim.fn.expand("$MASON/packages/java-test")
 
--- Project-specific workspace directory
-local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+  -- Construct the bundles
+  local bundles = {
+    vim.fn.glob(debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar", true),
+  }
+  vim.list_extend(bundles, vim.split(vim.fn.glob(test_path .. "/extension/server/*.jar", true), "\n"))
 
-local config = {
-  cmd = {
+  return bundles
+end
+
+local function get_settings()
+  -- Configure jdtls settings
+  local settings = {
+    java = {
+      -- Configure code generation to resemble IntelliJ
+      codeGeneration = {
+        -- Use Java 7 Objects method for hashCode and equals methods
+        hashCodeEquals = {
+          useInstanceof = true,
+          useJava7Objects = true,
+        },
+        -- Configure toString to resemble IntelliJ
+        toString = {
+          template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
+        },
+        -- Enforce code blocks when generating code
+        useBlocks = true,
+      },
+      -- Download sources for eclipse projects
+      eclipse = {
+        downloadSources = true,
+      },
+      -- Enable inlay hints for parameter names
+      inlayHints = {
+        parameterNames = {
+          enabled = "all",
+        },
+      },
+      -- Download sources for maven/gradle projects
+      maven = {
+        downloadSources = true,
+      },
+      -- Enable method signature help
+      signatureHelp = {
+        enabled = true,
+      },
+      -- Prevent wildcarding imports
+      sources = {
+        starThreshold = 9999,
+        staticThreshold = 9999,
+      },
+    },
+  }
+  return settings
+end
+
+local function setup_keymaps(bufnr)
+  local map = function(mode, keys, func, desc)
+    vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  local jdtls = require("jdtls")
+
+  -- Normal mode keymaps
+  map("n", "<leader>jo", jdtls.organize_imports, "[J]ava [O]rganize Imports")
+  map("n", "<leader>jv", jdtls.extract_variable, "[J]ava Extract [V]ariable")
+  map("n", "<leader>jc", jdtls.extract_constant, "[J]ava Extract [C]onstant")
+  map("n", "<leader>jt", jdtls.test_nearest_method, "[J]ava [T]est Method")
+  map("n", "<leader>jT", jdtls.test_class, "[J]ava [T]est Class")
+
+  -- Visual mode keymaps
+  map("v", "<leader>jm", function()
+    jdtls.extract_method(true)
+  end, "[J]ava Extract [M]ethod")
+end
+
+local function setup_jdtls()
+  -- Retrieve paths necessary to start jdtls
+  local jdtls_path = get_jdtls_path()
+  local workspace_dir = get_workspace_dir()
+
+  -- Create the command to start jdtls
+  local cmd = {
     jdtls_path .. "/bin/jdtls",
     "-data",
     workspace_dir,
-  },
-  root_dir = vim.fs.root(0, { "gradlew", "mvnw", ".git", "pom.xml", "build.gradle" }),
-  settings = {
-    java = {
-      inlayHints = { parameterNames = { enabled = "all" } },
-      signatureHelp = { enabled = true },
-    },
-  },
-  init_options = {
+  }
+
+  -- Get the root directory of the project
+  local root_dir = vim.fs.root(0, { "gradlew", "mvnw", ".git", "pom.xml", "build.gradle" })
+
+  -- Get debug adapter and test runner extensions
+  local bundles = get_bundles()
+  local init_options = {
     bundles = bundles,
-  },
-  on_attach = function(_, bufnr)
-    jdtls.setup_dap()
+  }
 
-    local map = function(keys, func, desc)
-      vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "JDTLS: " .. desc })
-    end
-    map("<leader>jo", jdtls.organize_imports, "Organize Imports")
-    map("<leader>jv", jdtls.extract_variable, "Extract Variable")
-    map("<leader>jc", jdtls.extract_constant, "Extract Constant")
-    map("<leader>jt", jdtls.test_nearest_method, "Test Nearest Method")
-    map("<leader>jT", jdtls.test_class, "Test Class")
+  -- Get the settings for jdtls
+  local settings = get_settings()
 
-    vim.keymap.set("v", "<leader>jm", function()
-      jdtls.extract_method(true)
-    end, { buffer = bufnr, desc = "JDTLS: Extract Method" })
-  end,
-}
+  -- Create the on_attach callback
+  local on_attach = function(_, bufnr)
+    require("jdtls").setup_dap()
 
-jdtls.start_or_attach(config)
+    -- Delay until server is ready
+    vim.defer_fn(function()
+      require("jdtls.dap").setup_dap_main_class_configs()
+    end, 1000)
+    setup_keymaps(bufnr)
+  end
+
+  -- Create the jdtls config
+  local config = {
+    cmd = cmd,
+    root_dir = root_dir,
+    init_options = init_options,
+    settings = settings,
+    on_attach = on_attach,
+  }
+
+  -- Start or attach to jdtls
+  require("jdtls").start_or_attach(config)
+end
+
+setup_jdtls()

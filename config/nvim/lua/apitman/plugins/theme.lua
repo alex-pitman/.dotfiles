@@ -17,7 +17,8 @@ return {
     require("tokyonight").setup({
       transparent = transparent,
       styles = {
-        comments = { italic = false }, -- Disable italics in comments
+        comments = { italic = false },
+        keywords = { italic = false },
         sidebars = transparent and "transparent" or "dark",
         floats = transparent and "transparent" or "dark",
       },

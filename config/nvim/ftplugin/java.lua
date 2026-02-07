@@ -53,12 +53,12 @@ local function get_settings()
           "java.util.Objects.requireNonNullElse",
           "org.mockito.Mockito.*",
         },
-        -- Set the import order for organizing imports
+        -- Set the import order for organizing imports (copy IntelliJ defaults)
         importOrder = {
           "java",
           "javax",
-          "com",
-          "org",
+          "",
+          "#",
         },
       },
       -- Allow navigation into decompiled .class files
@@ -70,7 +70,7 @@ local function get_settings()
         downloadSources = true,
       },
       -- Enable implementation count CodeLens ("all", "types", or "methods")
-      implementationCodeLens = "all",
+      implementationCodeLens = "types",
       -- Enable inlay hints for parameter names
       inlayHints = {
         parameterNames = {
@@ -132,6 +132,7 @@ local function setup_jdtls()
   -- Create the command to start jdtls
   local cmd = {
     jdtls_path .. "/bin/jdtls",
+    "--jvm-arg=-javaagent:" .. jdtls_path .. "/lombok.jar",
     "-data",
     workspace_dir,
   }

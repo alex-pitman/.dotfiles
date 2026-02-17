@@ -1,23 +1,25 @@
--- tabs & indentation
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.expandtab = true
-vim.o.autoindent = true
+-- Tabs & Indentation Settings
+vim.o.autoindent = true -- take indent for new line from previous line
+vim.o.breakindent = true -- wrapped line repeats indent
+vim.o.expandtab = true -- use spaces when <Tab> is inserted
+vim.o.shiftwidth = 2 -- number of spaces to use for (auto)indent step
+vim.o.softtabstop = 2 -- number of spaces that <Tab> uses while editing
+vim.o.tabstop = 2 -- number of spaces that <Tab> in file uses
 
--- appearance
-vim.o.number = true
--- vim.o.relativenumber = true
-vim.o.cursorline = true
-vim.o.scrolloff = 10
+-- Appearance settings
+vim.o.number = true -- print the line number in front of each line
+vim.o.relativenumber = true -- show relative line number in front of each line
+vim.o.cursorline = true -- highlight the screen line of the cursor
 vim.o.inccommand = "split" -- preview substitutions
-vim.o.signcolumn = "yes" -- always keep the sign column on
-vim.o.winborder = "rounded"
+vim.o.signcolumn = "yes" -- always show the sign column
+vim.o.winborder = "rounded" -- border style for floating windows
 vim.o.colorcolumn = "120"
 
--- editor
-vim.o.breakindent = true
+-- Editor settings
 vim.o.list = true -- enable whitespace characters
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" } -- whitespace characters
+vim.o.scrolloff = 10 -- number of lines to keep above/below cursor
+vim.o.sidescrolloff = 8 -- number of columns to keep to the left/right of the cursor
 
 -- split windows
 vim.o.splitright = true
@@ -27,7 +29,7 @@ vim.o.splitbelow = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- use system clipcoatd as default register
+-- use system clipboard as default register
 vim.opt.clipboard:append("unnamedplus")
 
 -- save undo history

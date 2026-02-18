@@ -1,20 +1,27 @@
-#### Prerequisites:
-Install the following with brew:
-* stow
-* ghostty
-* zoxide
-* tmux
-* lazygit
-* neovim (0.11 or later)
-* ripgrep (needed for telescope live grep)
-* tree-sitter-cli (needed to download/compile treesitter parsers)
+# Dotfiles
 
-#### Setup via stow:
-2. `stow -t ~/.config config`
-3. `stow -t ~ zsh`
-4. `stow -t ~ tmux`
+![screenshot](img/setup.png)
 
-#### Removing stow created symlinks:
-1. `stow -D -t ~/.config config`
-2. `stow -D ~ zsh`
-3. `stow -D ~ tmux`
+Neovim, Ghostty, tmux, zsh. Managed with [GNU Stow](https://www.gnu.org/software/stow/).
+
+## Install
+
+```sh
+brew bundle --file=homebrew/Brewfile
+```
+
+## Setup
+
+```sh
+stow -t ~/.config config
+stow -t ~ zsh
+stow -t ~ tmux
+```
+
+## Unlink
+
+```sh
+stow -D -t ~/.config config
+stow -D -t ~ zsh
+stow -D -t ~ tmux
+```
